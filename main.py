@@ -32,6 +32,9 @@ class OllamaResponse(BaseModel):
 
 
 app = FastAPI(title="AI Study Assistant Backend")
+@app.get("/")
+def home():
+    return {"message": "AI Study Assistant Backend Running 🚀"}
 
 app.add_middleware(
     CORSMiddleware,
@@ -163,4 +166,5 @@ if __name__ == "__main__":
     import uvicorn
 
     uvicorn.run("backend.main:app", host="0.0.0.0", port=8000, reload=True)
+
 
