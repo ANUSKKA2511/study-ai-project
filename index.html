@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>AI Study Assistant – Accessible</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="aurora" aria-hidden="true"></div>
+    <div id="modePrompt" class="mode-prompt" role="dialog" aria-modal="true" aria-labelledby="modePromptTitle" hidden>
+      <div class="mode-dialog">
+        <h2 id="modePromptTitle">How do you want to use the website?</h2>
+        <p id="modeInstructions" aria-live="polite">
+          Press V for Voice Control or T for Texting. Say “select voice” or “select typing”. On mobile, tap a button; swipe gestures are supported.
+        </p>
+        <div class="mode-actions">
+          <button id="chooseTyping" class="btn">Use Texting</button>
+          <button id="chooseVoice" class="btn primary">Use Voice Control</button>
+        </div>
+        <p class="mode-note">We will also ask this question aloud if your browser supports it.</p>
+      </div>
+    </div>
+    <div class="bg-shapes" aria-hidden="true">
+      <span class="shape s1"></span>
+      <span class="shape s2"></span>
+      <span class="shape s3"></span>
+      <span class="shape s4"></span>
+      <span class="shape s5"></span>
+    </div>
+    <div id="connectionBanner" class="connection-banner" role="alert" hidden>
+      Backend not reachable. Start the server first.
+    </div>
+    <header class="app-header">
+      <h1>AI Study Assistant</h1>
+      <button id="voiceToggle" class="btn primary" aria-pressed="false">
+        🎙 Start Voice Control
+      </button>
+    </header>
+
+    <nav class="app-nav" aria-label="Main navigation">
+      <button class="nav-link active" data-target="home" accesskey="1">
+        Home 
+      </button>
+      <button class="nav-link" data-target="study" accesskey="2">
+        Study Documents 
+      </button>
+      <button class="nav-link" data-target="qa" accesskey="3">
+        Ask Questions 
+      </button>
+      <button class="nav-link" data-target="dashboard" accesskey="4">
+        Progress Dashboard 
+      </button>
+      <button class="nav-link" data-target="settings" accesskey="5">
+        Settings & Help 
+      </button>
+    </nav>
+
+    <main id="mainContent" tabindex="-1">
+      <section id="page-home" class="page visible" aria-labelledby="home-heading">
+        <div class="hero hero-gradient">
+          <div class="hero-inner">
+            <h2 id="home-heading" class="hero-title">
+              <span class="hero-line">Learn</span>
+              <span class="hero-line highlight">smarter</span>
+              <span class="hero-line">with AI 🚀</span>
+            </h2>
+            <p class="hero-subtitle">
+              The new & fastest way to study: Create study guides or quick summaries,
+              practice with personalized questions and flashcards, get help from your AI tutor,
+              and track your progress instantly.
+            </p>
+            <div class="hero-actions">
+              <button class="nav-link cta-primary" data-target="study">
+                Get started – it's free
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="page-study"
+        class="page"
+        aria-labelledby="study-heading"
+      >
+        <h2 id="study-heading">Study Documents</h2>
+
+        <div class="panel">
+          <h3>Upload TXT Document</h3>
+          <form id="uploadForm">
+            <label for="fileInput">Choose a TXT file</label>
+            <input
+              id="fileInput"
+              name="file"
+              type="file"
+              accept=".txt,text/plain"
+            />
+            <button type="submit" class="btn primary">Upload</button>
+          </form>
+          <p id="uploadStatus" class="sr-only" aria-live="polite"></p>
+          <div class="button-row" aria-label="Alternative upload methods">
+            <button id="openFilePickerBtn" class="btn">Open File Picker</button>
+            <button id="startDictationBtn" class="btn">Start Dictation</button>
+            <button id="stopDictationBtn" class="btn">Stop Dictation & Upload</button>
+          </div>
+          <p id="dictationStatus" class="sr-only" aria-live="polite"></p>
+        </div>
+
+        <div class="panel">
+          <h3>Uploaded Documents</h3>
+          <label for="documentSelect">Select a document</label>
+          <select id="documentSelect"></select>
+          <button id="loadDocumentBtn" class="btn">Load</button>
+        </div>
+
+        <div class="panel">
+          <h3>Document Content</h3>
+          <div id="documentContent" class="document-content" aria-live="polite"></div>
+          <div class="button-row">
+            <button id="readAloudBtn" class="btn primary">
+              Read Aloud
+            </button>
+            <button id="summarizeBtn" class="btn">
+              Summarize with AI
+            </button>
+            <button id="explainBtn" class="btn">
+              Explain Simply
+            </button>
+          </div>
+          <div id="aiOutput" class="ai-output" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <section id="page-qa" class="page" aria-labelledby="qa-heading">
+        <h2 id="qa-heading">Ask Questions</h2>
+        <p>
+          Select a document on the Study Documents page first. Then ask a
+          question about it here.
+        </p>
+        <label for="questionInput">Your question</label>
+        <textarea
+          id="questionInput"
+          rows="4"
+          placeholder="Example: What is the main idea of this chapter?"
+        ></textarea>
+        <div class="button-row">
+          <button id="askQuestionBtn" class="btn primary">
+            Ask with AI
+          </button>
+        </div>
+        <div id="qaAnswer" class="ai-output" aria-live="polite"></div>
+      </section>
+
+      <section
+        id="page-dashboard"
+        class="page"
+        aria-labelledby="dashboard-heading"
+      >
+        <h2 id="dashboard-heading">Progress Dashboard</h2>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <h3>Documents Uploaded</h3>
+            <p id="statDocuments">0</p>
+          </div>
+          <div class="stat-card">
+            <h3>Summaries Requested</h3>
+            <p id="statSummaries">0</p>
+          </div>
+          <div class="stat-card">
+            <h3>Explanations Requested</h3>
+            <p id="statExplanations">0</p>
+          </div>
+          <div class="stat-card">
+            <h3>Questions Asked</h3>
+            <p id="statQuestions">0</p>
+          </div>
+          <div class="stat-card">
+            <h3>Estimated Listening Time (minutes)</h3>
+            <p id="statListeningMinutes">0</p>
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="page-settings"
+        class="page"
+        aria-labelledby="settings-heading"
+      >
+        <h2 id="settings-heading">Settings & Voice Commands</h2>
+
+        <div class="panel">
+          <h3>Accessibility</h3>
+          <div class="button-row">
+            <button id="toggleContrastBtn" class="btn">
+              Toggle High Contrast
+            </button>
+            <button id="increaseFontBtn" class="btn">
+              Increase Font Size
+            </button>
+            <button id="decreaseFontBtn" class="btn">
+              Decrease Font Size
+            </button>
+            <button id="enableMotivationBtn" class="btn primary">
+              Enable Motivation Mode
+            </button>
+            <button id="disableMotivationBtn" class="btn">
+              Disable Motivation Mode
+            </button>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3>Voice Commands</h3>
+          <p>
+            After starting voice control, you can say commands like:
+          </p>
+          <ul>
+            <li>"Go to home"</li>
+            <li>"Go to study"</li>
+            <li>"Go to questions"</li>
+            <li>"Go to dashboard"</li>
+            <li>"Go to settings"</li>
+            <li>"Read document"</li>
+            <li>"Summarize document"</li>
+            <li>"Explain document"</li>
+            <li>"Open file picker"</li>
+            <li>"Start dictation"</li>
+            <li>"Stop dictation"</li>
+            <li>"Upload document [name]" or "Upload document"</li>
+            <li>"Load document [name]" or "Load document"</li>
+          </ul>
+        </div>
+
+        <div class="panel">
+          <h3>Keyboard Navigation</h3>
+          <ul>
+            <li>Use Tab and Shift+Tab to move between controls.</li>
+            <li>Use Enter or Space to activate buttons.</li>
+            <li>Use access keys 1–5 to switch pages.</li>
+          </ul>
+        </div>
+      </section>
+    </main>
+
+    <div id="statusBar" aria-live="polite" class="status-bar"></div>
+
+    <script src="app.js"></script>
+  </body>
+  </html>
+
